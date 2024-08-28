@@ -6,7 +6,7 @@ export const handle: Handle = async ({ resolve, event }) => {
 	const refreshToken = event.cookies.get('refreshToken');
 
 	const originalApi = ky.create({
-		prefixUrl: `http://localhost:3000`
+		prefixUrl: `http://localhost:8000/api`
 	});
 
 	const api = originalApi.extend({
@@ -25,9 +25,7 @@ export const handle: Handle = async ({ resolve, event }) => {
 									Authorization: `Bearer ${refreshToken}`
 								}
 							});
-							const {
-								documents: { accessToken }
-							} = await response.json();
+							const { accessToken } = await response.json();
 							event.cookies.set('accessToken', accessToken, { path: '/' });
 							request.headers.set('Authorization', `Bearer ${accessToken}`);
 							return ky(request);
